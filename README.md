@@ -3,7 +3,7 @@ Create a string for importing the team on pokemon showdown from your save. Worki
 
 ## Usage
 `python main.py <path/to/file_name.sav>` where file_name.sav is the sav file from your game. 
-You can also leave blank, in that case the program will search for a Pokemon.sav file in the same directory as main.py.  
+You can also leave blank, in that case the program will search for a `Pokemon.sav` file in the same directory as `main.py`  
 The output is something like:  
 ```Jojo (Piplup)
 Level: 10
