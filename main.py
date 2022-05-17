@@ -65,7 +65,8 @@ with open(save_name, "rb") as f:
 		f.seek(off + 0x06)
 		checksum = int.from_bytes(f.read(2), "little")
 		blocks = bytes()
-		seed = checksum
+
+		# Decrypt time
 		dec = Decrypter(seed = checksum)
 		while len(blocks) < 128:
 			val = dec.next()
@@ -123,6 +124,8 @@ with open(save_name, "rb") as f:
 
 		# region B Table
 		offset = order.find("B") * 32
+
+		# Moves
 		data = int.from_bytes(blocks[offset:offset+2], 'little')
 		if data != 0:
 			print(f"- {moves[str(data)]}")
