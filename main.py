@@ -1,3 +1,4 @@
+import json
 from json import load
 from sys import argv
 
@@ -55,13 +56,16 @@ with open("Data/moves.json", "r") as f:
 with open("Data/abilities.json", "r") as f:
 	abilities = load(f)
 
+with open("Data/nature.json", "r") as f:
+	natures = load(f)
+
 with open(save_name, "rb") as f:
 	f.seek(0x94)
 	num_party = int.from_bytes(f.read(1), "little")
 	for i in range(num_party):
 		off = 0x98 + i * 236
 		f.seek(off)
-		pv = int.from_bytes(f.read(3), "little")
+		pv = int.from_bytes(f.read(4), "little")
 		f.seek(off + 0x06)
 		checksum = int.from_bytes(f.read(2), "little")
 		blocks = bytes()
@@ -117,13 +121,23 @@ with open(save_name, "rb") as f:
 		if data != 0:
 			print(f"item: {items[str(data)]}")
 
-		print(f"IVs: {blocks[134]} HP / {blocks[138]} Atk / {blocks[140]} Def / {blocks[144]} SpA / {blocks[142]} SpD / {blocks[146]} Spe")
-
 		print(f"Ability: {abilities[str(blocks[offset+13])]}")
+
+		print(f"{natures[str(pv % 25)]} Nature")
+
+		# EVs
+		print(f"EVs: {blocks[offset + 16]} HP / {blocks[offset + 17]} Atk / {blocks[offset + 18]} Def "
+			  f"/ {blocks[offset + 19]} SpA / {blocks[offset + 20]} SpD / {blocks[offset + 21]} Spe")
+
 		# endregion
 
 		# region B Table
 		offset = order.find("B") * 32
+
+		# IVs
+		data = int.from_bytes(blocks[offset+16:offset+20], 'little')
+		print(f"IVs: {data & 0x1F} HP / {data>>5 & 0x1F} Atk / {data>>10 & 0x1F} Def "
+			  f"/ {data>>15 & 0x1F} SpA / {data>>20 & 0x1F} SpD / {data>>25 & 0x1F} Spe")
 
 		# Moves
 		data = int.from_bytes(blocks[offset:offset+2], 'little')
