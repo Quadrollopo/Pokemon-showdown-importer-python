@@ -112,14 +112,15 @@ with open(save_name, "rb") as f:
 		offset = order.find("A") * 32
 		data = int.from_bytes(blocks[offset:offset+2], 'little')
 		if nickname:
-			print(f"{nickname} ({species[str(data)]})")
+			name = f"{nickname} ({species[str(data)]})"
 		else:
-			print({species[str(data)]})
+			name = {species[str(data)]}
 
-		print(f"Level: {blocks[132]}")
-		data = int.from_bytes(blocks[offset+2:offset+4], 'little')
+		data = int.from_bytes(blocks[offset + 2:offset + 4], 'little')
 		if data != 0:
-			print(f"item: {items[str(data)]}")
+			name += f" @ {items[str(data)]}"
+		print(name)
+		print(f"Level: {blocks[132]}")
 
 		print(f"Ability: {abilities[str(blocks[offset+13])]}")
 
